@@ -1,23 +1,7 @@
 import { db } from '@/db';
 import { errorHandler } from '@/lib/errors/handler';
+import { searchParamsSchema } from '@/lib/validators/searchParams';
 import { CreateUserValidator } from '@/lib/validators/user';
-import { z } from 'zod';
-
-const searchParamsSchema = z.object({
-  take: z
-    .string()
-    .refine((val) => Number(val) >= 0, {
-      message: `The 'take' parameter must be a positive number.`,
-    })
-    .optional(),
-  skip: z
-    .string()
-    .refine((val) => Number(val) >= 0, {
-      message: `The 'skip' parameter must be a positive number.`,
-    })
-    .optional(),
-  search: z.string().default(''),
-});
 
 export async function GET(req: Request) {
   try {
