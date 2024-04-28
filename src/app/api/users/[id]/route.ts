@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     });
 
     if (!user) throw new NotFoundError('User not found');
-    return Response.json({ code: 200, message: 'User updated successfully.', data: user });
+    return Response.json({ code: 200, message: 'User details retrieved successfully.', data: user });
   } catch (error) {
     return errorHandler(error);
   }
@@ -37,7 +37,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       },
       data: parsedBody,
     });
-    return Response.json({ code: 200, message: 'User details updated successfully.', data: updatedUser });
+    return Response.json({ code: 200, message: 'User updated successfully.', data: updatedUser });
   } catch (error) {
     return errorHandler(error);
   }
