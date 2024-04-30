@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
-import { BadRequestError, NotFoundError } from '.';
+import { BadRequestError, NotFoundError, UnauthenticatedError, UnauthorizedError } from '.';
 
 type HandledError = Error | ZodError | Prisma.PrismaClientKnownRequestError | any;
 
@@ -16,6 +16,8 @@ export const errorHandler = (error: HandledError) => {
       break;
     case error instanceof NotFoundError:
     case error instanceof BadRequestError:
+    case error instanceof UnauthenticatedError:
+    case error instanceof UnauthorizedError:
       response = { code: error.statusCode, message: error.message };
       break;
     default:

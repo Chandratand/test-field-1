@@ -21,6 +21,7 @@ model User {
   address     String?
   birthdate   DateTime?
   birthplace  String?
+  role        String? @default("User")
 
   // Soft delete field
   deletedAt DateTime? @map("deleted_at")

@@ -1,10 +1,13 @@
 import { db } from '@/db';
+import { UnauthorizedError } from '@/lib/errors';
 import { errorHandler } from '@/lib/errors/handler';
+import { verifyAuth } from '@/lib/jwt';
 import { searchParamsSchema } from '@/lib/validators/searchParams';
 import { CreateUserValidator } from '@/lib/validators/user';
 
 export async function GET(req: Request) {
   try {
+    verifyAuth();
     const searchParams = Object.fromEntries(new URL(req.url).searchParams.entries());
     const { take, skip, search } = searchParamsSchema.parse(searchParams);
 
@@ -25,6 +28,8 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyAuth();
+    if (auth?.role !== 'Admin') throw new UnauthorizedError('Unauthorized');
     const body = await req.json();
 
     const parsedBody = CreateUserValidator.parse(body);

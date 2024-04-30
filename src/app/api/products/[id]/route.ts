@@ -1,10 +1,12 @@
 import { db } from '@/db';
-import { NotFoundError } from '@/lib/errors';
+import { NotFoundError, UnauthorizedError } from '@/lib/errors';
 import { errorHandler } from '@/lib/errors/handler';
+import { verifyAuth } from '@/lib/jwt';
 import { EditProductValidator } from '@/lib/validators/product';
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
+    verifyAuth();
     const { id } = params;
     if (!Number(id)) throw new NotFoundError('Product not found');
 
@@ -24,6 +26,8 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
+    const user = verifyAuth();
+    if (user?.role !== 'Admin') throw new UnauthorizedError('Unauthorized');
     const { id } = params;
     if (!Number(id)) throw new NotFoundError('Product not found');
 
@@ -45,6 +49,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
+    const auth = verifyAuth();
+    if (auth?.role !== 'Admin') throw new UnauthorizedError('Unauthorized');
     const { id } = params;
     if (!Number(id)) throw new NotFoundError('Product not found');
 
